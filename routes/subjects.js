@@ -21,34 +21,43 @@ router.get('/',async (req,res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
-    try {
-        const subject = await Subject.findById(req.params.id)
-        if (!subject) return res.status(404).json({ error: 'Not found' })
+
+router.get('/:id',async (req,res) => {
+    try{
+       let{ id } = req.params
+       const subject = await Subject.findById(id)
+       if(!subject) res.status(400).json({err : err.message})
+       res.status(201).json(subject)
+    }catch(err){
+        res.status(500).json({err : err.message})
+    }
+    
+})
+
+
+router.put('/:id',async (req,res) => {
+    try{
+        const{id} = req.params
+        const subject = await Subject.findByIdAndUpdate(id , req.body , {new : true}) 
+        if(!subject) res.status(500).json({err : err.message})
         res.json(subject)
-    } catch (err) {
-        res.status(500).json({ error: err.message })
+    }catch(err){
+        res.status(500).json({err : err.message})
+    }
+})
+
+router.delete('/:id',async (req,res) => {
+    try{
+        const{id} = req.params
+        const subject = await Subject.findByIdAndDelete(id) 
+        if(!subject) res.status(500).json({err : err.message})
+        res.json({message : 'Deleted'})
+    }catch(err){
+        res.status(500).json({err : err.message})
     }
 })
 
 
-router.put('/:id', async (req, res) => {
-    try {
-        const subject = await Subject.findByIdAndUpdate(req.params.id, req.body, { new: true })
-        if (!subject) return res.status(404).json({ error: 'Not found' })
-        res.json(subject)
-    } catch (err) {
-        res.status(400).json({ error: err.message })
-    }
-})
 
-router.delete('/:id', async (req, res) => {
-    try {
-        const subject = await Subject.findByIdAndDelete(req.params.id)
-        if (!subject) return res.status(404).json({ error: 'Not found' })
-        res.json({ message: 'Deleted' })
-    } catch (err) {
-        res.status(500).json({ error: err.message })
-    }
-})
+
 module.exports = router
