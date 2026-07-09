@@ -3,10 +3,12 @@ const app = express()
 const mongoose = require('mongoose')
 require('dotenv').config()
 const subjectRoutes = require('./routes/subjects')
-
+const topicRoutes =   require('./routes/topic')
+const sessionRoutes =   require('./routes/session')
 app.use(express.json()) 
 app.use('/api/subjects', subjectRoutes)
-
+app.use('/api/topic/',topicRoutes)
+app.use('/api/session/',sessionRoutes)
 mongoose.connect(process.env.MONGO_URI)
         .then(()=>{
             console.log('mongodb connected')
