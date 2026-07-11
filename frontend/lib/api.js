@@ -10,16 +10,19 @@ async function request(path , options = { }) {
         throw new Error(err.error || err.err || 'Request failed')
     }
 
-    return res.json
+    return res.json()
 
 }
 
-export const getSubjects = () => request('/subject')
-export const createSubject = (data) => request('/subject',{method:'POST' , body : JSON.stringify(data)})
+export const getSubjects = () => request('/subjects')
 
 export const getTopics = () => request('/topic')
-export const createTopic = (data) => request('topic',{method:"POST" , body : JSON.stringify(data)})
-export const updateTopic = (id,data) => request(`topic/${id}` , {method : "PUT" , body: JSON.stringify(data)})
+export const updateTopic = (id,data) => request(`/topic/${id}` , {method : "PUT" , body: JSON.stringify(data)})
 
-export const getSessions = () => request('/sessions')
-export const createSession = (data) => request('/sessions', { method: 'POST', body: JSON.stringify(data) })
+export const getSessions = () => request('/session')
+export const createSession = (data) => request('/session', { method: 'POST', body: JSON.stringify(data) })
+
+export const getSetting = () => request('/settings/') 
+export const createSetting = (data) => request('/settings/',{method:'POST',body : JSON.stringify(data)})
+
+
