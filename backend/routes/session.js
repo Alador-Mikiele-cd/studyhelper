@@ -32,4 +32,16 @@ router.put('/:id', async (req, res) => {
         res.status(400).json({ err: err.message })
     }
 })
+
+router.delete('/:id',async (req,res) => {
+    try{
+    const {id} = req.params
+    const session = await Session.findByIdAndDelete(id)
+    if(!session) return res.status(500).json({message: "something went worng"})
+    res.json({message:"Deleted"})
+    }catch(err){
+        res.status(404).json({err: err.message})
+    }
+    
+})
 module.exports = router

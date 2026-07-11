@@ -6,6 +6,8 @@ const topicShema = new mongoose.Schema({
      name:String,
      status:String,
      lastReviewedAt:Date,
+     grade:Number,
+     unit:String,
 })
 
 const Topic = mongoose.model("Topic" , topicShema)

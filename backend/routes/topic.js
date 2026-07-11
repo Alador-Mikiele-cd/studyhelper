@@ -14,6 +14,16 @@ router.post('/',async (req,res) => {
     
 })
 
+router.post('/bulk',async (req,res) => {
+    try{
+        const topic = await Topic.insertMany(req.body)
+
+        res.status(201).json(topic)
+    }catch(err){
+        res.status(400).json({err: err.message})
+    }
+})
+
 router.get('/' , async (req,res) => {
     try{
        const topic = await Topic.find().populate('subjectId')
@@ -44,4 +54,19 @@ router.put('/:id' , async (req,res) => {
     }
 })
 
+router.delete('/:id',async (req,res) => {
+    try{
+    const {id} = req.params
+    const topic = await Topic.findByIdAndDelete(id)
+    if(!topic) return res.status(500).json({message: "something went worng"})
+    res.json({message:"Deleted"})
+    }catch(err){
+        res.status(404).json({err: err.message})
+    }
+    
+})
 module.exports = router
+
+// eng 6a5117b80f8c939f7526d694
+// che 6a51185dac16ac42775acd60
+// phy 6a511866ac16ac42775acd6
