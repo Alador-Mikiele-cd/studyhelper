@@ -50,8 +50,9 @@ export default function OnboardingSubject() {
                         {subjects.map((s) => (
                             <button
                                 key={s._id}
+                                onClick={() => router.push(`/onboarding/onboarding_subject/${s._id}`)}
                                 className="flex items-center justify-between border border-[#26241F]/20 bg-[#F3EFE4] px-5 py-4 text-left transition-colors hover:border-[#26241F]/50"
-                                
+
                             >
                                 <span className="font-serif text-lg text-[#26241F]">{s.name}</span>
                                 <span className="font-mono text-[11px] text-[#6B6656]">
