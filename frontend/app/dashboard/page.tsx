@@ -1,11 +1,14 @@
 'use client'
 
 import { useRouter } from "next/navigation"
-import {getSetting , getSessions} from '@/lib/api'
+import {getSetting , getSessions,getTopics} from '@/lib/api'
 import { useEffect, useState } from "react"
 export default function dashboard(){
     const router = useRouter()
     const [target , setTarget] = useState()
+    const[weakSubject , setWeakSubject] = useState()
+    const[duration , setDuration] = useState<Number>()
+    const[listWeakSubject , setListWeakSubject] = useState<[] | null>([])
     
     
     useEffect(()=>{
@@ -13,8 +16,32 @@ export default function dashboard(){
             const target = await getSetting()
             setTarget(target.targetScore)
         }
+        async function getWeakSubject() {
+            const topics = await  getTopics()
+            const filtered = topics.filter((t:any) => t.status === 'weak')
+            setWeakSubject(filtered)
+        }
+        async function getDuration(){
+          const session = await getSessions()
+          const total = session.reduce((sum: number, s: any) => sum + (s.durationMinutes || 0), 0)
+          const hours = total / 60
+          setDuration(hours)
+          console.log(total)
+          
+        }
+        async function getWeakTopics() {
+            const topic = await getTopics()
+            const filterd = topic.filter((t :any) => t.status === 'weak')
+        
+            setListWeakSubject(filterd)
+            
+        }
+
         
         getTarget()
+        getWeakSubject()
+        getDuration()
+        getWeakTopics()
         
     },[])
    return (
@@ -36,13 +63,13 @@ export default function dashboard(){
                 <div className="border border-[#D8D0BC] bg-[#F3EFE4] px-4 py-4">
                     <p className="font-mono text-[10px] tracking-[0.15em] text-[#6B6656]">THIS WEEK</p>
                     <p className="mt-1 font-serif text-2xl text-[#26241F]">
-                        6.5<span className="text-sm text-[#6B6656]">h</span>
+                        {duration}<span className="text-sm text-[#6B6656]">h</span>
                     </p>
                 </div>
 
                 <div className="border border-[#A63A2C] bg-[#F3EFE4] px-4 py-4">
                     <p className="font-mono text-[10px] tracking-[0.15em] text-[#A63A2C]">WEAK</p>
-                    <p className="mt-1 font-serif text-2xl text-[#A63A2C]">4</p>
+                    <p className="mt-1 font-serif text-2xl text-[#A63A2C]">{weakSubject?.length ?? 0}</p>
                 </div>
             </div>
 
@@ -56,12 +83,15 @@ export default function dashboard(){
                     NEEDS REVIEW
                 </p>
                 <div className="mt-3 flex flex-col gap-2">
-                    <div className="flex items-center justify-between border-b border-[#26241F]/10 pb-2">
+                    {listWeakSubject?.slice(0,3).map ((t:any)=>(
+ <div className="flex items-center justify-between border-b border-[#26241F]/10 pb-2">
                         <span className="font-serif text-sm text-[#26241F]">
-                            Exponential and Logarithmic Functions
+                            {t.name}
                         </span>
                         <span className="font-mono text-[11px] text-[#6B6656]">9 days ago</span>
                     </div>
+                    ))}
+                   
                     <div className="flex items-center justify-between pb-2">
                         <span className="font-serif text-sm text-[#26241F]">Grammar</span>
                         <span className="font-mono text-[11px] text-[#6B6656]">never reviewed</span>
