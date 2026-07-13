@@ -9,7 +9,8 @@ export default function dashboard(){
     const[weakSubject , setWeakSubject] = useState()
     const[duration , setDuration] = useState<Number>()
     const[listWeakSubject , setListWeakSubject] = useState<[] | null>([])
-    
+    const[lastReviewed , setLastReviewed] = useState()
+   
     
     useEffect(()=>{
         async function getTarget() {
@@ -26,14 +27,21 @@ export default function dashboard(){
           const total = session.reduce((sum: number, s: any) => sum + (s.durationMinutes || 0), 0)
           const hours = total / 60
           setDuration(hours)
-          console.log(total)
+        
           
         }
         async function getWeakTopics() {
             const topic = await getTopics()
             const filterd = topic.filter((t :any) => t.status === 'weak')
-        
-            setListWeakSubject(filterd)
+            setListWeakSubject(filterd)  
+            const data = new Date()
+
+            const id = filterd.slice(0,3).map((t:any)=>t.lastReviewedAt)
+            setLastReviewed(id)
+            console.log(id)
+            console.log('full weak topics:', filterd)
+            
+            
             
         }
 
@@ -84,18 +92,17 @@ export default function dashboard(){
                 </p>
                 <div className="mt-3 flex flex-col gap-2">
                     {listWeakSubject?.slice(0,3).map ((t:any)=>(
- <div className="flex items-center justify-between border-b border-[#26241F]/10 pb-2">
+ <div key={t._id} className="flex items-center justify-between border-b border-[#26241F]/10 pb-2">
                         <span className="font-serif text-sm text-[#26241F]">
                             {t.name}
                         </span>
-                        <span className="font-mono text-[11px] text-[#6B6656]">9 days ago</span>
+                        <span className="font-mono text-[11px] text-[#6B6656]">{t.lastReviewedAt
+    ? new Date(t.lastReviewedAt).toLocaleDateString()
+    : 'Never reviewed'}</span>
                     </div>
                     ))}
                    
-                    <div className="flex items-center justify-between pb-2">
-                        <span className="font-serif text-sm text-[#26241F]">Grammar</span>
-                        <span className="font-mono text-[11px] text-[#6B6656]">never reviewed</span>
-                    </div>
+                    
                 </div>
             </div>
         </main>
