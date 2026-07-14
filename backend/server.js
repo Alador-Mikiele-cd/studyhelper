@@ -24,3 +24,6 @@ mongoose.connect(process.env.MONGO_URI)
             console.log('mongodb connected')
             app.listen(8000 , console.log('server rungin on ' + process.env.PORT ))
         })
+
+
+
